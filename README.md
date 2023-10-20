@@ -28,7 +28,7 @@ The Reverse will include the following key features:
 
 ## Technology Stack
 
-The Collaborative Problem-Solving Platform will be developed using the following technologies:
+The Reverse will be developed using the following technologies:
 
 - **Server-Side Framework**: Django
 - **Client-Side Framework**: React
@@ -51,6 +51,6 @@ The team working on this project includes:
 
 The Reverse is an exciting project designed to create an inclusive and secure environment for individuals interested in reverse engineering. Leveraging Django on the server side and React on the client side, the project aims to provide a versatile and user-friendly experience.
 
-This project proposal outlines the core features, technologies, and objectives of the Collaborative Problem-Solving Platform. It is intended to foster collaboration, learning, and a commitment to high coding and security standards. We look forward to the development of this project and the creation of a valuable resource for our target audience.
+This project proposal outlines the core features, technologies, and objectives of the Reverse. It is intended to foster collaboration, learning, and a commitment to high coding and security standards. We look forward to the development of this project and the creation of a valuable resource for our target audience.
 
 For any inquiries or further discussions regarding this proposal, please do not hesitate to contact us.
