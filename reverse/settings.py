@@ -38,8 +38,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'reverse',
-    'chat',
     'crackmes',
+    'authentication',
+    'main',
+    'chat',
 ]
 
 MIDDLEWARE = [

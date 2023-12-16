@@ -1,46 +1,46 @@
-# views.py 
-
-from django.shortcuts import render, get_object_or_404, redirect
-from .models import PrivateChat, Message
-from django.contrib.auth.decorators import login_required
+# chat/views.py
+import json
 from django.http import JsonResponse
-
-from django.shortcuts import render, get_object_or_404, redirect
-from django.http import JsonResponse
+from django.shortcuts import render
+from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
-from .models import PrivateChat, Message
+from .models import Message
+from django.db.models import Q
+from django.contrib.auth.models import User
 
 @login_required
-def private_chat(request, chat_id):
-    chat = get_object_or_404(PrivateChat, id=chat_id, user1=request.user)
-    messages = Message.objects.filter(chat=chat).order_by('timestamp')
+def chat(request, username):
+    receiver = User.objects.get(username=username)
+    messages = Message.objects.filter(
+        (Q(sender=request.user) & Q(receiver=receiver)) |
+        (Q(sender=receiver) & Q(receiver=request.user))
+    ).order_by('timestamp')
 
-    return render(request, 'private_chat.html', {'chat': chat, 'messages': messages})
+    return render(request, 'chat.html', {'messages': messages, 'receiver': receiver})
 
+@csrf_exempt
 @login_required
-def send_message(request, chat_id):
+def send_message(request):
     if request.method == 'POST':
-        chat = get_object_or_404(PrivateChat, id=chat_id, user1=request.user)
-        content = request.POST.get('content', '')
+        data = json.loads(request.body.decode('utf-8'))
+        text = data.get('text', '')
+        receiver_username = data.get('receiver_username', '')
+        print(f"1: {receiver_username}")
 
-        if content:
-            message = Message.objects.create(chat=chat, sender=request.user, content=content)
-            data = {
-                'id': message.id,
-                'sender': message.sender.username,
-                'content': message.content,
-                'timestamp': message.timestamp.strftime('%Y-%m-%d %H:%M:%S')
-            }
+        # Now you can proceed with creating the message
+        receiver = User.objects.get(username=receiver_username)
+        message = Message.objects.create(sender=request.user, receiver=receiver, text=text)
+        
+        return JsonResponse({'status': 'success'})
+    
+    return JsonResponse({'status': 'error'})
 
-            return JsonResponse(data)
-
-    return redirect('private_chat', chat_id=chat_id)
-
-@login_required
-def get_messages(request, chat_id, last_message_id):
-    chat = get_object_or_404(PrivateChat, id=chat_id, user1=request.user)
-    messages = Message.objects.filter(chat=chat, id__gt=last_message_id).order_by('timestamp')
-
-    data = [{'id': message.id, 'sender': message.sender.username, 'content': message.content, 'timestamp': message.timestamp.strftime('%Y-%m-%d %H:%M:%S')} for message in messages]
-
-    return JsonResponse({'messages': data})
+def get_messages(request, username):
+    receiver = User.objects.get(username=username)
+    messages = Message.objects.filter(
+        (Q(sender=request.user) & Q(receiver=receiver)) |
+        (Q(sender=receiver) & Q(receiver=request.user))
+    ).order_by('timestamp')
+    messages_data = [{'sender': message.sender.username, 'timestamp': message.timestamp, 'text': message.text}
+                     for message in messages]
+    return JsonResponse({'messages': messages_data})

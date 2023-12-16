@@ -1,0 +1,17 @@
+<!-- templates/main/home.html -->
+
+{% extends 'base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+    {% if user.is_authenticated %}
+        <h2>Hello {{ username }}</h2>
+        <p>Your user ID is: {{ userid }}</p>
+        <p><a href="{% url 'logout' %}">Logout</a></p>
+        <!-- Add other content for authenticated users as needed -->
+    {% else %}
+        <p>You are not logged in. <a href="{% url 'login' %}">Login</a></p>
+        <!-- Add other content for non-authenticated users as needed -->
+    {% endif %}
+{% endblock %}

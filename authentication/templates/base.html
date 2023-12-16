@@ -1,0 +1,29 @@
+<!-- base.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Your Website{% endblock %}</title>
+    <!-- Add your CSS stylesheets or links here -->
+</head>
+<body>
+
+<nav>
+    <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/login">Login</a></li>
+        <!-- Add other navigation links as needed -->
+    </ul>
+</nav>
+
+<div id="content">
+    {% block content %}{% endblock %}
+</div>
+
+<!-- Add your JavaScript scripts or links here -->
+
+</body>
+</html>
