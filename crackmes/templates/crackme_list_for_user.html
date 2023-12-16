@@ -1,0 +1,6 @@
+<h2>Crackmes for {{ user.username }}</h2>
+<ul>
+    {% for crackme in crackmes %}
+        <li><a href="{{crackme.title}}">{{ crackme.title }}</a></li>
+    {% endfor %}
+</ul>

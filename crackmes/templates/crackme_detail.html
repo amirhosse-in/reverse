@@ -1,0 +1,27 @@
+<!-- crackmes/templates/crackme_detail.html -->
+<h2>{{ user.username }} - {{ crackme.title }}</h2>
+<p>Description: {{ crackme.description }}</p>
+{% if crackme.binary_file %}
+    <a href="download">Download Binary</a>
+{% else %}
+    <p>No binary file available for download.</p>
+{% endif %}
+
+<h3>Comments:</h3>
+<ul>
+    {% for comment in comments %}
+        <li>{{ comment.user.username }} ({{ comment.timestamp|date:"F d, Y H:i:s" }}): {{ comment.text }}</li>
+    {% endfor %}
+</ul>
+
+{% if user.is_authenticated %}
+    <h3>Add a Comment:</h3>
+    <form method="post" action="{% url 'crackme_detail' username=crackme.user.username title=crackme.title %}">
+        {% csrf_token %}
+        {{ comment_form.text }}
+        <button type="submit">Post Comment</button>
+    </form>
+{% else %}
+    <p>Login to comment.</p>
+{% endif %} 
+
