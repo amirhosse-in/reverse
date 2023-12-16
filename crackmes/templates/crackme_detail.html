@@ -7,6 +7,19 @@
     <p>No binary file available for download.</p>
 {% endif %}
 
+<h3>Solutions:</h3>
+<ul>
+    {% for solution in solutions %}
+        <li><a href="{% url 'crackmes:download_solution' username=solution.user.username title=solution.title %}">{{ solution.user.username }} - {{ solution.title }}</a></li>
+    {% endfor %}
+</ul>
+
+{% if user.is_authenticated %}
+    <h3><a href="{% url 'crackmes:submit_solution' username=crackme.user.username title=crackme.title %}" target="_blank">Submit Solution</a></h3>
+{% else %}
+    <p><a href="/login">Login</a> to comment.</p>
+{% endif %}
+
 <h3>Comments:</h3>
 <ul>
     {% for comment in comments %}
@@ -16,12 +29,12 @@
 
 {% if user.is_authenticated %}
     <h3>Add a Comment:</h3>
-    <form method="post" action="{% url 'crackme_detail' username=crackme.user.username title=crackme.title %}">
+    <form method="post" action="{% url 'crackmes:crackme_detail' username=crackme.user.username title=crackme.title %}">
         {% csrf_token %}
         {{ comment_form.text }}
         <button type="submit">Post Comment</button>
     </form>
 {% else %}
-    <p>Login to comment.</p>
+    <p><a href="/login">Login</a> to comment.</p>
 {% endif %} 
 

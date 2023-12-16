@@ -1,0 +1,7 @@
+<!-- submit_solution.html -->
+<h2>Submit Solution for {{ crackme.title }}</h2>
+<form method="post" action="{% url 'crackmes:submit_solution' username=crackme.user.username title=crackme.title %}" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ solution_form.as_p }}
+    <button type="submit">Submit Solution</button>
+</form>

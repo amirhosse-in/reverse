@@ -1,6 +1,6 @@
 # forms.py
 from django import forms
-from .models import Crackme, Comment
+from .models import Crackme, Comment, Solution
 
 class CrackmeSubmissionForm(forms.ModelForm):
     class Meta:
@@ -24,3 +24,8 @@ class CommentForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(CommentForm, self).__init__(*args, **kwargs)
         self.fields['text'].widget = forms.Textarea(attrs={'rows': 3, 'placeholder': 'Enter your comment here...'})
+
+class SolutionForm(forms.ModelForm):
+    class Meta:
+        model = Solution
+        fields = ['title', 'description', 'binary_file']

@@ -1,8 +1,9 @@
 # crackmes/views.py
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from .forms import CrackmeSubmissionForm, CommentForm
-from .models import Crackme, Comment
+from django.views import View
+from .forms import CrackmeSubmissionForm, CommentForm, SolutionForm
+from .models import Crackme, Comment, Solution
 from django.contrib.auth.models import User
 from django.http import FileResponse, HttpResponse
 from django.shortcuts import get_object_or_404
@@ -38,7 +39,7 @@ def crackme_detail(request, username, title):
     user = request.user  # This assumes you have the authentication middleware enabled
     crackme = get_object_or_404(Crackme, user__username=username, title=title)
     comments = Comment.objects.filter(crackme=crackme)
-    
+    solutions = Solution.objects.filter(crackme=crackme)
     if request.method == 'POST' and user.is_authenticated:
         comment_form = CommentForm(request.POST)
         if comment_form.is_valid():
@@ -49,7 +50,7 @@ def crackme_detail(request, username, title):
     else:
         comment_form = CommentForm()
 
-    return render(request, 'crackme_detail.html', {'crackme': crackme, 'user': user, 'comments': comments, 'comment_form': comment_form})
+    return render(request, 'crackme_detail.html', {'crackme': crackme, 'user': user, 'comments': comments, 'comment_form': comment_form, "solutions": solutions})
 
 def download_binary(request, pk):
     crackme = get_object_or_404(Crackme, pk=pk)
@@ -68,3 +69,35 @@ def download_binary(request, username, title):
         # Handle the case where there is no binary file available
         # You can redirect to an error page or show a message
         return HttpResponse("No binary file available for download.")
+    
+def submit_solution(request, username, title):
+    user = request.user
+    crackme = get_object_or_404(Crackme, user__username=username, title=title)
+
+    if request.method == 'POST' and user.is_authenticated:
+        solution_form = SolutionForm(request.POST, request.FILES)
+        if solution_form.is_valid():
+            solution = solution_form.save(commit=False)
+            solution.user = user
+            solution.crackme = crackme
+            solution.save()
+            return redirect('crackmes:crackme_detail', username=username, title=title)
+    else:
+        solution_form = SolutionForm()
+
+    return render(request, 'submit_solution.html', {'crackme': crackme, 'user': user, 'solution_form': solution_form})
+
+def download_solution(request, username, title):
+    solution = get_object_or_404(Solution, user__username=username, title=title)
+    # Assuming 'binary_file' is the FileField in your Solution model
+    response = FileResponse(solution.binary_file, content_type='application/force-download')
+    response['Content-Disposition'] = f'attachment; filename="{solution.binary_file.name}"'
+    return response
+
+class CrackmeListView(View):
+    template_name = 'crackme_list.html'  # Create this template
+
+    def get(self, request):
+        crackmes = Crackme.objects.all()
+        context = {'crackmes': crackmes}
+        return render(request, self.template_name, context)

@@ -24,7 +24,7 @@ urlpatterns = [
     path('', include('chat.urls')),
     path('', include('authentication.urls')),
     path('', include('main.urls')),
-    path('crackme/', include('crackmes.urls')),
+    path('crackmes/', include('crackmes.urls')),
 ]
 
 if settings.DEBUG:

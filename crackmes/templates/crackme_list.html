@@ -1,0 +1,7 @@
+<h2>Crackme List</h2>
+
+<ul>
+    {% for crackme in crackmes %}
+        <li><a href="{% url 'crackmes:crackme_detail' username=crackme.user.username title=crackme.title %}">{{ crackme.title }}</a></li>
+    {% endfor %}
+</ul>

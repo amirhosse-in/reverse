@@ -1,0 +1,22 @@
+<h2>{{ user.username }}'s Profile</h2>
+
+<h3>Crackmes:</h3>
+<ul>
+    {% for crackme in crackmes %}
+        <li><a href="{% url 'crackmes:crackme_detail' username=crackme.user.username title=crackme.title %}">{{ crackme.title }}</a></li>
+    {% endfor %}
+</ul>
+
+<h3>Solutions:</h3>
+<ul>
+    {% for solution in solutions %}
+        <li><a href="{% url 'crackmes:crackme_detail' username=solution.crackme.user.username title=solution.crackme.title %}">{{ solution.crackme.title }} : {{ solution.title }}</a></li>
+    {% endfor %}
+</ul>
+
+<h3>Comments:</h3>
+<ul>
+    {% for comment in comments %}
+        <li><a href="{% url 'crackmes:crackme_detail' username=comment.crackme.user.username title=comment.crackme.title %}">{{ comment.crackme.title }}</a></li>
+    {% endfor %}
+</ul>
