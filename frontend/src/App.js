@@ -12,12 +12,12 @@ import Rank from "./components/newRank";
 import NewSerach from "./components/newSearch";
 import Register from "./components/register";
 import Profile from "./components/profile";
+import Upload from "./components/upload";
+import RankItem from "./components/rankItem";
 
 
  
 function App() {
-
-  
 
     return(
         <Router>
@@ -30,6 +30,9 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/profile/*" element={<Profile />} />
+        <Route path="/upload" element={<Upload />} />
+        <Route path="/crack/*" element={<RankItem />} />
         <Route path="*" element={<NotFound />} />
 
       </Routes>

@@ -36,6 +36,7 @@ class Header extends Component {
       {
         this.state.isLoggedIn ? 
         <>
+          <a className="text-sm" href="/upload">Upload Crackmes</ a >
           <a className="text-sm" href="/profile">Profile</ a >
           <a className="text-sm" href="#" onClick={this.logout}>Logout</ a >
         </>

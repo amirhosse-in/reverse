@@ -31,7 +31,7 @@ class Login extends Component {
       .then((res) => {
         if(res.data.ok)
         {
-          window.location.replace('/');
+          window.location.replace('/home');
         }
         else
         {
@@ -87,7 +87,7 @@ class Login extends Component {
             />
           </div>
           <div className="flex justify-center items-center">
-            <a className="text-[#9ACC13]" href="">i want Register</a>
+            <a className="text-[#9ACC13]" href="/register">i want Register</a>
           </div>
         </form>
       </div>

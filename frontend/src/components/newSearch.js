@@ -8,117 +8,164 @@ class NewSerach extends Component {
     super(props);
     this.state = {
       viewCompleted: false,
-      RankList: []
+      RankList: [],
+      Author: '',
+      Language: '',
+      Arch: '',
+      Difficulty: '',
+      Quality: '',
+      Platform: '',
     };
+    this.handleOne = this.handleOne.bind(this);
+    this.handleTwo = this.handleTwo.bind(this);
+    this.handleThree = this.handleThree.bind(this);
+    this.handleFour = this.handleFour.bind(this);
+    this.handleFive = this.handleFive.bind(this);
+    this.handleSix = this.handleSix.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    
   }
 
-  componentDidMount() {
+  handleOne(event) {
+    this.setState({Author: event.target.value});
+    
+  }
+  handleTwo(event) {
+    this.setState({Language: event.target.value});
+    
+  }
+  handleThree(event) {
+    this.setState({Arch: event.target.value});
+    
+  }
+  handleFour(event) {
+    this.setState({Difficulty: event.target.value});
+    
+  }
+  handleFive(event) {
+    this.setState({Quality: event.target.value});
+    
+    
+  }
+  handleSix(event) {
+    this.setState({Platform: event.target.value});
+    
+  }
+  
+  // componentDidMount() {
+  //   this.refreshList();
+  // }
+  handleSubmit(event){
+    event.preventDefault();
+    let formData = new FormData(event.target);
+    let data = {};
+    for(const [key, item] of formData){
+      data[key] = item;
+    }
+    console.log(data);
     this.refreshList();
   }
 
   refreshList = () => {
     axios
-      .get("/api/Ranks/")
-      .then((res) => this.setState({ RankList: res.data }))
+      .get(`/api/ranks/?Author=${this.state.Author}&Language=${this.state.Language}&Arch=${this.state.Arch}&Difficulty=${this.state.Difficulty}&Quality=${this.state.Quality}&Platform=${this.state.Platform}`)
+      .then((res) => this.setState({ RankList: res.data.data }))
       .catch((err) => console.log(err));
   };
 
   renderItems = () => {
     const newItems = this.state.RankList;
-    console.log(newItems);
-    return newItems.map((item) => (
+    return newItems.map((item) =>(
       
-    //  
-    <tr class="odd:bg-[#3c3c3c] even:bg-[#272727] border-black">
-                <td
-                  key = {item.id}
-                  scope="row"
-                  class="px-6 py-4 font-medium text-white whitespace-nowrap"
-                >
-                  <Link to={item.NameLink}>{item.Name}</Link>
-                </td>
-                <td class="px-6 py-4"><Link to={item.AuthorLink}>{item.Author}</Link></td>
-                <td class="px-6 py-4">{item.Language}</td>
-                <td class="px-6 py-4">{item.Arch}</td>
-                <td class="px-6 py-4">{item.Difficulty}</td>
-                <td class="px-6 py-4">{item.Quality}</td>
-                <td class="px-6 py-4">{item.Platform}</td>
-                <td class="px-6 py-4">{item.Date}</td>
-                <td class="px-6 py-4">{item.Solution}</td>
-                <td class="px-6 py-4">{item.Comments}</td>
-              </tr>
+    <tr className="odd:bg-[#3c3c3c] even:bg-[#272727] border-black">
+        <td
+          key = {item.fields.id}
+          scope="row"
+          className="px-6 py-4 font-medium text-white whitespace-nowrap"
+        >
+          <Link to={`/crack/${item.pk}`}>{item.fields.Name}</Link>
+        </td>
+        <td className="px-6 py-4"><Link to={`/profile/${item.fields.Author}`}>{item.fields.Author}</Link></td>
+        <td className="px-6 py-4">{item.fields.Language}</td>
+        <td className="px-6 py-4">{item.fields.Arch}</td>
+        <td className="px-6 py-4">{item.fields.Difficulty}</td>
+        <td className="px-6 py-4">{item.fields.Quality}</td>
+        <td className="px-6 py-4">{item.fields.Platform}</td>
+        <td className="px-6 py-4">{item.fields.created_at.split('T')[0]}</td>
+        <td className="px-6 py-4">{item.fields.solutions}</td>
+        <td className="px-6 py-4">{item.fields.comments}</td>
+      </tr>
     ));
   };
 
   render() {
     return (
         <div>
-            <div class="flex justify-center items-center bg-[#272727] text-[#ffffff] h-[85vh] ">
-    <form className='flex flex-col gap-4 w-full sm:w-[80%] md:w-[60%]'>
-      <div class="grid sm:grid-cols-12 mt-5 ">
-        <div class="col-span-3">
-          <label class="ml-2" for="">Crackme name </label>
+            <div className="flex justify-center items-center bg-[#272727] text-[#ffffff] h-[85vh] ">
+    <form onSubmit={this.handleSubmit}
+    className='flex flex-col gap-4 w-full sm:w-[80%] md:w-[60%]'>
+      <div className="grid sm:grid-cols-12 mt-5 ">
+        <div className="col-span-3">
+          <label className="ml-2" >Crackme name </label>
         </div>
-        <div class="col-span-9 w-[98%] flex justify-center items-center">
+        <div className="col-span-9 w-[98%] flex justify-center items-center">
           <input
-            class="text-[#272727] w-[98%]"
+            className="text-[#272727] w-[98%]"
             type="text"
             placeholder="name"
+            name="Name"
           />
         </div>
       </div>
-      <div class="grid sm:grid-cols-12">
-        <div class="col-span-3"><label class="ml-2" for="">Author</label></div>
-        <div class="col-span-9 w-[98%] flex justify-center items-center">
+      <div className="grid sm:grid-cols-12">
+        <div className="col-span-3"><label className="ml-2" >Author</label></div>
+        <div className="col-span-9 w-[98%] flex justify-center items-center">
           <input
-            class="text-[#272727] w-[98%]"
+            className="text-[#272727] w-[98%]"
             type="text"
+            name="Author"
             placeholder="Author"
+            value={this.state.Author}
+            onChange={this.handleOne}
           />
         </div>
       </div>
 
-      <div class="grid sm:grid-cols-12">
-        <div class="col-span-3">
-          <label class="ml-2" for="">Difficulty between </label>
+      <div className="grid sm:grid-cols-12">
+        <div className="col-span-3">
+          <label className="ml-2" >Difficulty between </label>
         </div>
-        <div class="col-span-9 w-[98%] flex justify-center items-center">
+        <div className="col-span-9 w-[98%] flex justify-center items-center">
           <input
-            class="text-[#272727] w-[98%]"
-            list="diff"
-            name="dif"
-            id="dif"
+            className="text-[#272727] w-[98%]"
+            name="Difficulty"
+            type="number"
+            value={this.state.Difficulty}
+            onChange={this.handleFour} 
           />
-          <datalist id="diff">
-            <option value="1-2"></option>
-            <option value="2-3"></option>
-            <option value="3-4"></option>
-            <option value="5-6"></option>
-          </datalist>
+          
         </div>
       </div>
-      <div class="grid sm:grid-cols-12">
-        <div class="col-span-3">
-          <label class="ml-2" for="">Quality </label>
+      <div className="grid sm:grid-cols-12">
+        <div className="col-span-3">
+          <label className="ml-2" >Quality </label>
         </div>
-        <div class="col-span-9 w-[98%] flex justify-center items-center">
-          <input class="text-[#272727] w-[98%]" list="Quality" />
-          <datalist id="Quality">
-            <option value="1"></option>
-            <option value="2"></option>
-            <option value="3"></option>
-            <option value="4"></option>
-            <option value="5"></option>
-            <option value="6"></option>
-          </datalist>
+        <div className="col-span-9 w-[98%] flex justify-center items-center">
+          <input className="text-[#272727] w-[98%]" list="Quality" type="number"
+          name="Quality"
+          value={this.state.Quality}
+          onChange={this.handleFive}  />
+          
         </div>
       </div>
-      <div class="grid sm:grid-cols-12">
-        <div class="col-span-3">
-          <label class="ml-2" for="">Langage </label>
+      <div className="grid sm:grid-cols-12">
+        <div className="col-span-3">
+          <label className="ml-2" >Langage </label>
         </div>
-        <div class="col-span-9 w-[98%] flex justify-center items-center">
-          <input class="text-[#272727] w-[98%]" list="Langage" />
+        <div className="col-span-9 w-[98%] flex justify-center items-center">
+          <input className="text-[#272727] w-[98%]" list="Langage"
+          value={this.state.Language}
+          onChange={this.handleTwo}  />
           <datalist id="Langage">
             <option value="C/C++"></option>
             <option value="Assembler"></option>
@@ -131,10 +178,13 @@ class NewSerach extends Component {
           </datalist>
         </div>
       </div>
-      <div class="grid sm:grid-cols-12">
-        <div class="col-span-3"><label class="ml-2" for="">Arch </label></div>
-        <div class="col-span-9 w-[98%] flex justify-center items-center">
-          <input class="text-[#272727] w-[98%]" list="Arch" />
+      <div className="grid sm:grid-cols-12">
+        <div className="col-span-3"><label className="ml-2" >Arch </label></div>
+        <div className="col-span-9 w-[98%] flex justify-center items-center">
+          <input className="text-[#272727] w-[98%]" list="Arch"
+          value={this.state.Arch}
+          name="Arch"
+          onChange={this.handleThree}  />
           <datalist id="Arch">
             <option value="x86"></option>
             <option value="x86-64"></option>
@@ -145,12 +195,15 @@ class NewSerach extends Component {
           </datalist>
         </div>
       </div>
-      <div class="grid sm:grid-cols-12">
-        <div class="col-span-3">
-          <label class="ml-2" for="">Platform </label>
+      <div className="grid sm:grid-cols-12">
+        <div className="col-span-3">
+          <label className="ml-2" >Platform </label>
         </div>
-        <div class="col-span-9 w-[98%] flex justify-center items-center">
-          <input class="text-[#272727] w-[98%]" list="Platform" />
+        <div className="col-span-9 w-[98%] flex justify-center items-center">
+          <input className="text-[#272727] w-[98%]" list="Platform"
+          value={this.state.Platform}
+          name="Platform"
+          onChange={this.handleSix}  />
           <datalist id="Platform">
             <option value="DOS"></option>
             <option value="Mac OS X"></option>
@@ -162,30 +215,30 @@ class NewSerach extends Component {
         </div>
       </div>
 
-      <div class="flex justify-center items-center bg-[#9ACC13] m-5">
-        <input type="submit" value="Search" />
+      <div className="flex justify-center items-center bg-[#9ACC13] m-5">
+        <input type="submit"/>
       </div>
     </form>
     </div>    
-        <div class="bg-[#272727] h-[85vh]">
+        <div className="bg-[#272727] h-[85vh]">
         <div
-          class="mx-2 relative md:flex md:flex-col md:justify-center md:items-center overflow-x-auto shadow-md sm:rounded-lg"
+          className="mx-2 relative md:flex md:flex-col md:justify-center md:items-center overflow-x-auto shadow-md sm:rounded-lg"
         >
-          <h2 class="text-white ml-2 text-3xl my-2">Latest Crackmes</h2>
+          <h2 className="text-white ml-2 text-3xl my-2">Latest Crackmes</h2>
   
-          <table class="w-[80vw] text-sm text-left rtl:text-right text-white">
-            <thead class="text-xs text-white uppercase bg-[#171717]">
+          <table className="w-[80vw] text-sm text-left rtl:text-right text-white">
+            <thead className="text-xs text-white uppercase bg-[#171717]">
               <tr>
-                <th scope="col" class="px-4 py-2">Name</th>
-                <th scope="col" class="px-4 py-2">Author</th>
-                <th scope="col" class="px-4 py-2">Language</th>
-                <th scope="col" class="px-4 py-2">Arch</th>
-                <th scope="col" class="px-4 py-2">Difficulty</th>
-                <th scope="col" class="px-4 py-2">Quality</th>
-                <th scope="col" class="px-4 py-2">Platform</th>
-                <th scope="col" class="px-4 py-2">Date</th>
-                <th scope="col" class="px-4 py-2">Solution</th>
-                <th scope="col" class="px-4 py-2">Comments</th>
+                <th scope="col" className="px-4 py-2">Name</th>
+                <th scope="col" className="px-4 py-2">Author</th>
+                <th scope="col" className="px-4 py-2">Language</th>
+                <th scope="col" className="px-4 py-2">Arch</th>
+                <th scope="col" className="px-4 py-2">Difficulty</th>
+                <th scope="col" className="px-4 py-2">Quality</th>
+                <th scope="col" className="px-4 py-2">Platform</th>
+                <th scope="col" className="px-4 py-2">Date</th>
+                <th scope="col" className="px-4 py-2">Solution</th>
+                <th scope="col" className="px-4 py-2">Comments</th>
               </tr>
             </thead>
             <tbody>

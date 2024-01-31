@@ -46,6 +46,10 @@ def register(request):
     return makeResponse(ok=True, msg='user registered!')
 
 def getUser(request):
+    if request.GET.get('username'):
+        if Users.objects.filter(username=request.GET.get('username')).count():
+            user = Users.objects.get(username=request.GET.get('username'))
+            return makeResponse(ok=True, data={'username': user.username, 'id': user.id})
     if request.session.get('user_id'):
         user = Users.objects.get(id=request.session['user_id'])
         return makeResponse(ok=True, data={'username': user.username, 'id': user.id})
@@ -90,6 +94,10 @@ def newRank(request):
         fileContent=fileContent,
     )
     return makeResponse(ok=True, msg='rank created successfuly', data={'rankId': rank.id})
+
+def getRank(request):
+    rank = Rank.objects.filter(id=request.GET.get('rankId'))
+    return makeResponse(ok=True, data=modelToDict(rank))
 
 def ranks(request):
     ranks = Rank.objects.filter()
@@ -143,7 +151,10 @@ def solutions(request):
     userId = request.GET.get('userId')
     if userId:
         solutions &= Solutions.objects.filter(userId=userId)
-    return makeResponse(ok=True, data=modelToDict(solutions))
+    data = modelToDict(solutions)
+    for i in range(len(solutions)):
+        data[i]['fields']['username'] = Users.objects.get(id=solutions[i].userId).username
+    return makeResponse(ok=True, data=data)
 
 def newComment(request):
     userId = request.session['user_id']
@@ -164,7 +175,10 @@ def comments(request):
     userId = request.GET.get('userId')
     if userId:
         comments &= Comments.objects.filter(userId=userId)
-    return makeResponse(ok=True, data=modelToDict(comments))
+    data = modelToDict(comments)
+    for i in range(len(comments)):
+        data[i]['fields']['username'] = Users.objects.get(id=comments[i].userId).username
+    return makeResponse(ok=True, data=data)
 
 def test(request):
     if Users.objects.filter(username='farbodhma'):

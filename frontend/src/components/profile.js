@@ -3,9 +3,7 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 
 
-
 // Functional Component
-
 class Profile extends Component {
     constructor(props) {
       super(props);
@@ -16,18 +14,25 @@ class Profile extends Component {
         comments: [],
       };
       this.user = null;
+
+      let splittedUrl = window.location.href.split('/');
+      if(splittedUrl[splittedUrl.length - 1] == '')
+        splittedUrl.pop();
+      this.getUsername = splittedUrl[splittedUrl.length - 1];
+      if(this.getUsername == 'profile')
+        this.getUsername = null;
     }
   
     componentDidMount() {
-
-        axios.get('/api/getUser/').then((res) => {
+        let url = '/api/getUser/' + (this.getUsername ? '?username=' + this.getUsername : '');
+        axios.get(url).then((res) => {
             this.user = res.data.data;
+            console.log(res.data);
             this.setState({user: this.user});
-            axios.get(`/api/ranks/?Author=${this.user.username}`).then((res) => this.setState({ranks: res.data.data}));
+            axios.get(`/api/ranks/?Author=${this.user?.username ?? this.getUsername}`).then((res) => this.setState({ranks: res.data.data}));
             axios.get(`/api/solutions/?userId=${this.user.id}`).then((res) => this.setState({solutions: res.data.data}));
             axios.get(`/api/comments/?userId=${this.user.id}`).then((res) => this.setState({comments: res.data.data}));
         });
-
     }
     renderItemsComment = () => {
         const newItems = this.state.comments;
@@ -170,7 +175,6 @@ class Profile extends Component {
                                             </tbody>
                                         </table>
                                     </div>
-                                                            
                             </div>
                         </div>
                     </div>
