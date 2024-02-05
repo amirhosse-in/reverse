@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  db:
+    image: postgres
+    environment:
+      POSTGRES_DB: web_project
+      POSTGRES_PASSWORD: 1234
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    network_mode: "host"
+
+  web:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    environment:
+      PRODUCTION_MODE: "0"
+    network_mode: "host"
+    depends_on:
+      - db
+
+volumes:
+  pg_data:
+
