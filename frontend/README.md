@@ -1,70 +1,112 @@
-# Getting Started with Create React App
+# My React Frontend Project
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Welcome to my React frontend
+This project is a copy of crackmes website to react.
 
-## Available Scripts
+## Getting Started
 
-In the project directory, you can run:
+Follow these instructions to get a copy of the project up and running on your local machine.
 
-### `npm start`
+### Installation
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+1. Clone the repository:
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+    ```bash
+   git clone https://github.com/amirhosse-in/reverse.git
+   cd frontend
+   npm i
+    ```
 
-### `npm test`
+### Running the Application
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```bash
+    npm start
 
-### `npm run build`
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## structure
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+We used React for the frontend section of the project, which helps us use components and avoid loading many sections repetitively.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+We have a folder named "components" where we place all our components.
 
-### `npm run eject`
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## index.js
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+ ```
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import 'bootstrap/dist/css/bootstrap.css';
+import './index.css';
+import App from './App';
+import Header from "./components/header";
+import Footer from "./components/footer";
+import reportWebVitals from './reportWebVitals';
+<script src="https://cdn.tailwindcss.com"></script>
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+  <React.StrictMode>
+    <Header />
+    <App />
+    <Footer />
+  </React.StrictMode>,
+  document.getElementById('root')
+);
 
-## Learn More
+ ``` 
+ Yes, in that case, the main frame of your project will be placed in a section of code inside the app. App usually serves as the main frame for displaying the content of your website or application. Inside App, you display your main and dynamic content, and use header and footer to display static and repetitive components.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Therefore, App is essentially a main component that loads all other components and pages within it and applies the main settings of the program.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## app.js
 
-### Code Splitting
+ ```
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+import Home from "./components/home";
+import NotFound from "./components/NotFound";
+import Faq from "./components/faq";
+import Login from "./components/login";
+import Rank from "./components/newRank";
+import NewSerach from "./components/newSearch";
+import Register from "./components/register";
+import Profile from "./components/profile";
+import Upload from "./components/upload";
+import RankItem from "./components/rankItem";
+import Chats from "./components/chats";
+import Chat from "./components/chat";
 
-### Analyzing the Bundle Size
+function App() {
+    return(
+        <Router>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/home" element={<Home />} />
+            <Route path="/faq" element={<Faq />} />
+            <Route path="/search" element={<NewSerach/>} />
+            <Route path="/rank" element={<Rank />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/profile/*" element={<Profile />} />
+            <Route path="/upload" element={<Upload />} />
+            <Route path="/crack/*" element={<RankItem />} />
+            <Route path="/chats" element={<Chats />} />
+            <Route path="/chat/*" element={<Chat />} />
+            <Route path="*" element={<NotFound />} />
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+          </Routes>
+        </Router>
+        );
+}
+export default App;
+  ```
 
-### Making a Progressive Web App
+  Yes, in React, you can specify the content of each page using the URL and connect each page to a component. This is typically done using React Router, which allows you to manage routing and display different content based on the URL.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+Each URL in React Router can contain different parameters that are used to determine the exact content of the desired page. For example, if your URL includes /:pageName, pageName can be the name of the specific page that will be passed to the corresponding component.
 
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Additionally, using * at the end of a URL means anything and serves as a wildcard. This allows you to apply a specific strategy for displaying the appropriate page for URLs that do not match a specific pattern.
